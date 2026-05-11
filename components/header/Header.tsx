@@ -14,13 +14,13 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { AuthService } from "@/services/auth.service";
 import type { AuthUser } from "@/types/auth";
 import LoginModal from "./LoginModal";
 import RegisterModal from "./RegisterModal";
 
 import { useLanguage, Language } from "@/store/useLanguage";
 import { useTranslation } from "@/hooks/useTranslation";
+import { useAuth } from "@/store/useAuth";
 
 // ─── Dropdown hook ────────────────────────────────────────────────────────────
 function useDropdown() {
@@ -221,45 +221,24 @@ function AccountDropdown({ user, onLoginClick, onRegisterClick, onLogout, loggin
 
 export default function Header() {
     const { t } = useTranslation();
-    const [user, setUser] = useState<AuthUser | null>(null);
+    const { user, fetchMe, logout, initializing } = useAuth();
     const [loginOpen, setLoginOpen] = useState(false);
     const [registerOpen, setRegisterOpen] = useState(false);
     const [loggingOut, setLoggingOut] = useState(false);
-    const [initializing, setInitializing] = useState(true);
 
     useEffect(() => {
-        const token = localStorage.getItem("auth_token");
-        if (!token) {
-            setInitializing(false);
-            return;
-        }
-        AuthService.getMe()
-            .then((me) => setUser({ name: me.name, email: me.email }))
-            .catch(() => {
-                localStorage.removeItem("auth_token");
-            })
-            .finally(() => setInitializing(false));
-    }, []);
+        fetchMe();
+    }, [fetchMe]);
 
     const handleLoginSuccess = useCallback(() => {
-        AuthService.getMe()
-            .then((me) => setUser({ name: me.name, email: me.email }))
-            .catch(() => {
-                localStorage.removeItem("auth_token");
-            });
-    }, []);
+        fetchMe();
+    }, [fetchMe]);
 
     const handleLogout = useCallback(async () => {
         setLoggingOut(true);
-        try {
-            await AuthService.logout();
-        } catch {
-        } finally {
-            localStorage.removeItem("auth_token");
-            setUser(null);
-            setLoggingOut(false);
-        }
-    }, []);
+        await logout();
+        setLoggingOut(false);
+    }, [logout]);
 
     return (
         <>

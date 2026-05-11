@@ -8,5 +8,11 @@
   "profile": "Profile",
   "orders": "Order History",
   "change_password": "Change Password",
-  "logged_in": "Logged in"
+  "logged_in": "Logged in",
+  "name": "Full Name",
+  "username": "Username",
+  "email": "Email Address",
+  "save": "Save Changes",
+  "email_unchangeable": "Email cannot be changed",
+  "profile_updated": "Profile updated successfully!"
 }

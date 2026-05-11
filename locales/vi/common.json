@@ -8,5 +8,11 @@
   "profile": "Thông tin cá nhân",
   "orders": "Lịch sử đơn hàng",
   "change_password": "Đổi mật khẩu",
-  "logged_in": "Đã đăng nhập"
+  "logged_in": "Đã đăng nhập",
+  "name": "Họ và tên",
+  "username": "Tên đăng nhập",
+  "email": "Địa chỉ Email",
+  "save": "Lưu thay đổi",
+  "email_unchangeable": "Không thể thay đổi email",
+  "profile_updated": "Cập nhật thông tin thành công!"
 }

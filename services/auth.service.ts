@@ -20,4 +20,9 @@ export const AuthService = {
     logout: async (): Promise<void> => {
         await api.delete("user/auth/logout");
     },
+
+    update: async (payload: { name: string; username: string; email: string }): Promise<AuthUser> => {
+        const response = await api.put<{ data: AuthUser }>("user/auth/update", payload);
+        return response.data.data;
+    },
 };
