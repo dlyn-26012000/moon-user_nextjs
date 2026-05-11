@@ -11,7 +11,7 @@ interface AuthState {
     update: (payload: { name: string; username: string; email: string }) => Promise<void>;
 }
 
-export const useAuth = create<AuthState>((set, get) => ({
+export const useAuth = create<AuthState>((set, _get) => ({
     user: null,
     initializing: true,
     setUser: (user) => set({ user }),
@@ -24,7 +24,7 @@ export const useAuth = create<AuthState>((set, get) => ({
         try {
             const me = await AuthService.getMe();
             set({ user: me, initializing: false });
-        } catch (error) {
+        } catch (_error) {
             localStorage.removeItem("auth_token");
             set({ user: null, initializing: false });
         }
