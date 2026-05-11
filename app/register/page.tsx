@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 
-// Login is now handled via modal in the Header.
+// Registration is now handled via modal in the Header.
 // Redirect any direct visits to the home page.
-export default function LoginPage() {
+export default function RegisterPage() {
     redirect("/");
 }

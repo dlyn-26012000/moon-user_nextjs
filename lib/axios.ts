@@ -1,7 +1,29 @@
 import axios from "axios";
 
 const api = axios.create({
-    baseURL: "https://your-api.com/api",
+    baseURL: process.env.NEXT_PUBLIC_API_URL,
 });
+
+// Attach token from localStorage on every request
+api.interceptors.request.use((config) => {
+    if (typeof window !== "undefined") {
+        const token = localStorage.getItem("auth_token");
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+        }
+    }
+    return config;
+});
+
+// Handle 401 — clear token (do NOT redirect, login is a modal)
+api.interceptors.response.use(
+    (res) => res,
+    (err) => {
+        if (err.response?.status === 401 && typeof window !== "undefined") {
+            localStorage.removeItem("auth_token");
+        }
+        return Promise.reject(err);
+    }
+);
 
 export default api;
