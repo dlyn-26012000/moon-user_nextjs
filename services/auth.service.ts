@@ -3,8 +3,8 @@ import { AuthUser, LoginRequest, LoginResponse, RegisterRequest, RegisterRespons
 
 export const AuthService = {
     login: async (payload: LoginRequest): Promise<LoginResponse> => {
-        const response = await api.post<{ data: LoginResponse }>("user/auth/login", payload);
-        return response.data.data;
+        const response = await api.post<LoginResponse>("user/auth/login", payload);
+        return response.data;
     },
 
     getMe: async (): Promise<AuthUser> => {

@@ -13,6 +13,7 @@ import {
     Loader2,
 } from "lucide-react";
 import Link from "next/link";
+import { useRouter, usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { AuthUser } from "@/types/auth";
 import LoginModal from "./LoginModal";
@@ -221,6 +222,8 @@ function AccountDropdown({ user, onLoginClick, onRegisterClick, onLogout, loggin
 
 export default function Header() {
     const { t } = useTranslation();
+    const router = useRouter();
+    const pathname = usePathname();
     const { user, fetchMe, logout, initializing } = useAuth();
     const [loginOpen, setLoginOpen] = useState(false);
     const [registerOpen, setRegisterOpen] = useState(false);
@@ -237,8 +240,14 @@ export default function Header() {
     const handleLogout = useCallback(async () => {
         setLoggingOut(true);
         await logout();
+        
+        const protectedRoutes = ["/profile", "/change-password", "/orders"];
+        if (protectedRoutes.includes(pathname)) {
+            router.push("/");
+        }
+        
         setLoggingOut(false);
-    }, [logout]);
+    }, [logout, pathname, router]);
 
     return (
         <>
