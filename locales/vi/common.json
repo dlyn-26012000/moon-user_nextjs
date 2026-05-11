@@ -19,5 +19,8 @@
   "new_password": "Mật khẩu mới",
   "confirm_new_password": "Xác nhận mật khẩu mới",
   "change_password_success": "Đổi mật khẩu thành công!",
-  "passwords_do_not_match": "Mật khẩu xác nhận không khớp"
+  "passwords_do_not_match": "Mật khẩu xác nhận không khớp",
+  "cancel": "Hủy",
+  "update_profile_subtitle": "Cập nhật thông tin cá nhân của bạn",
+  "change_password_subtitle": "Bảo vệ tài khoản bằng mật khẩu mạnh"
 }

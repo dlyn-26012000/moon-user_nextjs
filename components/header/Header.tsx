@@ -18,6 +18,8 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import type { AuthUser } from "@/types/auth";
 import LoginModal from "./LoginModal";
 import RegisterModal from "./RegisterModal";
+import ProfileModal from "./ProfileModal";
+import ChangePasswordModal from "./ChangePasswordModal";
 
 import { useLanguage, Language } from "@/store/useLanguage";
 import { useTranslation } from "@/hooks/useTranslation";
@@ -107,18 +109,30 @@ interface AccountDropdownProps {
     user: AuthUser | null;
     onLoginClick: () => void;
     onRegisterClick: () => void;
+    onProfileClick: () => void;
+    onOrdersClick: () => void;
+    onChangePasswordClick: () => void;
     onLogout: () => void;
     loggingOut: boolean;
 }
 
-function AccountDropdown({ user, onLoginClick, onRegisterClick, onLogout, loggingOut }: AccountDropdownProps) {
+function AccountDropdown({ 
+    user, 
+    onLoginClick, 
+    onRegisterClick, 
+    onProfileClick,
+    onOrdersClick,
+    onChangePasswordClick,
+    onLogout, 
+    loggingOut 
+}: AccountDropdownProps) {
     const { open, setOpen, ref } = useDropdown();
     const { t } = useTranslation();
 
     const authItems = [
-        { href: "/profile", icon: <User size={16} />, label: t("profile") },
-        { href: "/orders", icon: <ClipboardList size={16} />, label: t("orders") },
-        { href: "/change-password", icon: <KeyRound size={16} />, label: t("change_password") },
+        { onClick: onProfileClick, icon: <User size={16} />, label: t("profile") },
+        { onClick: onOrdersClick, icon: <ClipboardList size={16} />, label: t("orders") },
+        { onClick: onChangePasswordClick, icon: <KeyRound size={16} />, label: t("change_password") },
     ];
 
     return (
@@ -154,16 +168,18 @@ function AccountDropdown({ user, onLoginClick, onRegisterClick, onLogout, loggin
                                 </p>
                             </div>
                             <div className="py-1">
-                                {authItems.map(({ href, icon, label }) => (
-                                    <Link
-                                        key={href}
-                                        href={href}
-                                        onClick={() => setOpen(false)}
-                                        className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors"
+                                {authItems.map(({ onClick, icon, label }, idx) => (
+                                    <button
+                                        key={idx}
+                                        onClick={() => {
+                                            setOpen(false);
+                                            onClick();
+                                        }}
+                                        className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors"
                                     >
                                         <span className="text-gray-400">{icon}</span>
                                         {label}
-                                    </Link>
+                                    </button>
                                 ))}
                             </div>
 
@@ -225,8 +241,12 @@ export default function Header() {
     const router = useRouter();
     const pathname = usePathname();
     const { user, fetchMe, logout, initializing } = useAuth();
+    
     const [loginOpen, setLoginOpen] = useState(false);
     const [registerOpen, setRegisterOpen] = useState(false);
+    const [profileOpen, setProfileOpen] = useState(false);
+    const [changePasswordOpen, setChangePasswordOpen] = useState(false);
+    
     const [loggingOut, setLoggingOut] = useState(false);
 
     useEffect(() => {
@@ -251,7 +271,7 @@ export default function Header() {
 
     return (
         <>
-            <header className="h-16 flex items-center justify-between px-4 sm:px-6 bg-primary">
+            <header className="sticky top-0 z-50 h-16 flex items-center justify-between px-4 sm:px-6 bg-primary shadow-md">
                 <div className="flex items-center gap-4">
                     <Link href="/" className="text-xl font-bold text-white tracking-tight">
                         LOGO
@@ -273,6 +293,9 @@ export default function Header() {
                             user={user}
                             onLoginClick={() => setLoginOpen(true)}
                             onRegisterClick={() => setRegisterOpen(true)}
+                            onProfileClick={() => setProfileOpen(true)}
+                            onOrdersClick={() => router.push("/orders")}
+                            onChangePasswordClick={() => setChangePasswordOpen(true)}
                             onLogout={handleLogout}
                             loggingOut={loggingOut}
                         />
@@ -298,6 +321,16 @@ export default function Header() {
                     setRegisterOpen(false);
                     setLoginOpen(true);
                 }}
+            />
+
+            <ProfileModal
+                open={profileOpen}
+                onClose={() => setProfileOpen(false)}
+            />
+
+            <ChangePasswordModal
+                open={changePasswordOpen}
+                onClose={() => setChangePasswordOpen(false)}
             />
         </>
     );

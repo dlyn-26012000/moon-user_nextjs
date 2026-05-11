@@ -19,5 +19,8 @@
   "new_password": "New Password",
   "confirm_new_password": "Confirm New Password",
   "change_password_success": "Password changed successfully!",
-  "passwords_do_not_match": "Passwords do not match"
+  "passwords_do_not_match": "Passwords do not match",
+  "cancel": "Cancel",
+  "update_profile_subtitle": "Update your personal information",
+  "change_password_subtitle": "Protect your account with a strong password"
 }
