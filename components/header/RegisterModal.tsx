@@ -4,6 +4,7 @@ import { Eye, EyeOff, Loader2, UserPlus, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { AuthService } from "@/services/auth.service";
 import type { AuthUser } from "@/types/auth";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface RegisterModalProps {
     open: boolean;
@@ -23,6 +24,7 @@ export default function RegisterModal({ open, onClose, onSuccess, onSwitchToLogi
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const { t } = useTranslation();
 
     const nameRef = useRef<HTMLInputElement>(null);
 
@@ -60,7 +62,7 @@ export default function RegisterModal({ open, onClose, onSuccess, onSwitchToLogi
         if (!name.trim() || !username.trim() || !email.trim() || !password || !passwordConfirmation) return;
         
         if (password !== passwordConfirmation) {
-            setError("Mật khẩu xác nhận không khớp.");
+            setError(t("auth:password_mismatch"));
             return;
         }
 
@@ -84,7 +86,7 @@ export default function RegisterModal({ open, onClose, onSuccess, onSwitchToLogi
         } catch (err: unknown) {
             const msg =
                 (err as { response?: { data?: { message?: string } } })
-                    ?.response?.data?.message ?? "Đăng ký thất bại. Vui lòng thử lại.";
+                    ?.response?.data?.message ?? t("auth:register_failed");
             setError(msg);
         } finally {
             setLoading(false);
@@ -107,7 +109,7 @@ export default function RegisterModal({ open, onClose, onSuccess, onSwitchToLogi
             className="fixed inset-0 z-[100] flex items-center justify-center p-4"
             aria-modal="true"
             role="dialog"
-            aria-label="Đăng ký"
+            aria-label={t("auth:register_title")}
         >
             <div
                 className="absolute inset-0 bg-black/50 backdrop-blur-sm animate-fade-in"
@@ -120,15 +122,15 @@ export default function RegisterModal({ open, onClose, onSuccess, onSwitchToLogi
                 <div className="p-8 max-h-[90vh] overflow-y-auto">
                     <div className="flex items-start justify-between mb-6">
                         <div>
-                            <h2 className="text-2xl font-bold text-gray-900">Đăng ký</h2>
+                            <h2 className="text-2xl font-bold text-gray-900">{t("auth:register_title")}</h2>
                             <p className="text-sm text-gray-500 mt-1">
-                                Tạo tài khoản mới để bắt đầu mua sắm!
+                                {t("auth:register_subtitle")}
                             </p>
                         </div>
                         <button
                             onClick={onClose}
                             className="p-1.5 rounded-lg text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition-colors"
-                            aria-label="Đóng"
+                            aria-label={t("auth:close")}
                         >
                             <X size={20} />
                         </button>
@@ -143,9 +145,9 @@ export default function RegisterModal({ open, onClose, onSuccess, onSwitchToLogi
 
                     <form onSubmit={handleSubmit} className="space-y-4" noValidate>
                         {/* Name */}
-                        <div>
+                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                                Họ và tên
+                                {t("auth:full_name")}
                             </label>
                             <input
                                 ref={nameRef}
@@ -160,9 +162,9 @@ export default function RegisterModal({ open, onClose, onSuccess, onSwitchToLogi
                         </div>
 
                         {/* Username */}
-                        <div>
+                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                                Tên đăng nhập
+                                {t("auth:username")}
                             </label>
                             <input
                                 type="text"
@@ -176,9 +178,9 @@ export default function RegisterModal({ open, onClose, onSuccess, onSwitchToLogi
                         </div>
 
                         {/* Email */}
-                        <div>
+                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                                Email
+                                {t("auth:email")}
                             </label>
                             <input
                                 type="email"
@@ -192,9 +194,9 @@ export default function RegisterModal({ open, onClose, onSuccess, onSwitchToLogi
                         </div>
 
                         {/* Password */}
-                        <div>
+                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                                Mật khẩu
+                                {t("auth:password")}
                             </label>
                             <div className="relative">
                                 <input
@@ -206,11 +208,12 @@ export default function RegisterModal({ open, onClose, onSuccess, onSwitchToLogi
                                     disabled={loading}
                                     className="w-full h-11 px-4 pr-11 rounded-lg border border-gray-200 text-sm text-gray-900 outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/20 disabled:opacity-50"
                                 />
-                                <button
+                                 <button
                                     type="button"
                                     tabIndex={-1}
                                     onClick={() => setShowPassword((v) => !v)}
                                     className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                                    aria-label={showPassword ? t("auth:hide_password") : t("auth:show_password")}
                                 >
                                     {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                                 </button>
@@ -218,9 +221,9 @@ export default function RegisterModal({ open, onClose, onSuccess, onSwitchToLogi
                         </div>
 
                         {/* Password Confirmation */}
-                        <div>
+                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                                Xác nhận mật khẩu
+                                {t("auth:confirm_password")}
                             </label>
                             <div className="relative">
                                 <input
@@ -232,11 +235,12 @@ export default function RegisterModal({ open, onClose, onSuccess, onSwitchToLogi
                                     disabled={loading}
                                     className="w-full h-11 px-4 pr-11 rounded-lg border border-gray-200 text-sm text-gray-900 outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/20 disabled:opacity-50"
                                 />
-                                <button
+                                 <button
                                     type="button"
                                     tabIndex={-1}
                                     onClick={() => setShowConfirmPassword((v) => !v)}
                                     className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                                    aria-label={showConfirmPassword ? t("auth:hide_password") : t("auth:show_password")}
                                 >
                                     {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                                 </button>
@@ -244,7 +248,7 @@ export default function RegisterModal({ open, onClose, onSuccess, onSwitchToLogi
                         </div>
 
                         {/* Submit */}
-                        <button
+                         <button
                             type="submit"
                             disabled={loading || !name.trim() || !username.trim() || !email.trim() || !password || !passwordConfirmation}
                             className="w-full h-11 rounded-lg bg-primary text-white font-semibold text-sm flex items-center justify-center gap-2 transition-all hover:brightness-110 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
@@ -252,24 +256,24 @@ export default function RegisterModal({ open, onClose, onSuccess, onSwitchToLogi
                             {loading ? (
                                 <>
                                     <Loader2 size={18} className="animate-spin" />
-                                    Đang đăng ký...
+                                    {t("auth:registering")}
                                 </>
                             ) : (
                                 <>
                                     <UserPlus size={18} />
-                                    Đăng ký
+                                    {t("auth:register_button")}
                                 </>
                             )}
                         </button>
                     </form>
 
-                    <p className="text-center text-sm text-gray-500 mt-6">
-                        Đã có tài khoản?{" "}
+                     <p className="text-center text-sm text-gray-500 mt-6">
+                        {t("auth:have_account")}{" "}
                         <button 
                             onClick={onSwitchToLogin} 
                             className="text-primary font-semibold hover:underline"
                         >
-                            Đăng nhập ngay
+                            {t("auth:login_now")}
                         </button>
                     </p>
                 </div>

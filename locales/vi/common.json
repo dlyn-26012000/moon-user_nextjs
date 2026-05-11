@@ -1,0 +1,12 @@
+{
+  "login": "Đăng nhập",
+  "register": "Đăng ký",
+  "logout": "Đăng xuất",
+  "language": "Ngôn ngữ",
+  "home": "Trang chủ",
+  "search": "Tìm kiếm",
+  "profile": "Thông tin cá nhân",
+  "orders": "Lịch sử đơn hàng",
+  "change_password": "Đổi mật khẩu",
+  "logged_in": "Đã đăng nhập"
+}

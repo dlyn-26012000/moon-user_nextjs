@@ -19,7 +19,8 @@ import type { AuthUser } from "@/types/auth";
 import LoginModal from "./LoginModal";
 import RegisterModal from "./RegisterModal";
 
-type Language = "VI" | "EN";
+import { useLanguage, Language } from "@/store/useLanguage";
+import { useTranslation } from "@/hooks/useTranslation";
 
 // ─── Dropdown hook ────────────────────────────────────────────────────────────
 function useDropdown() {
@@ -42,15 +43,15 @@ function useDropdown() {
 // ─── Language Switcher ────────────────────────────────────────────────────────
 function LanguageSwitcher() {
     const { open, setOpen, ref } = useDropdown();
-    const [lang, setLang] = useState<Language>("VI");
+    const { language, setLanguage } = useLanguage();
 
     const languages: { code: Language; label: string; flag: string }[] = [
-        { code: "VI", label: "Tiếng Việt", flag: "🇻🇳" },
-        { code: "EN", label: "English", flag: "🇬🇧" },
+        { code: "vi", label: "Tiếng Việt", flag: "🇻🇳" },
+        { code: "en", label: "English", flag: "🇬🇧" },
     ];
 
     function select(code: Language) {
-        setLang(code);
+        setLanguage(code);
         setOpen(false);
     }
 
@@ -62,12 +63,12 @@ function LanguageSwitcher() {
                 aria-expanded={open}
                 className={[
                     "flex items-center gap-1.5 h-9 px-3 rounded-lg border transition-all duration-200 text-sm font-semibold",
-                    "border-white/30 text-white",
+                    "border-white/30 text-white uppercase",
                     open ? "bg-white/20 shadow-inner" : "bg-white/10 hover:bg-white/20",
                 ].join(" ")}
             >
                 <Globe size={16} strokeWidth={2} />
-                <span className="hidden sm:inline">{lang}</span>
+                <span className="hidden sm:inline">{language}</span>
                 <ChevronDown
                     size={14}
                     strokeWidth={2.5}
@@ -83,14 +84,14 @@ function LanguageSwitcher() {
                             onClick={() => select(code)}
                             className={[
                                 "w-full flex items-center gap-3 px-4 py-2.5 text-sm transition-colors",
-                                lang === code
+                                language === code
                                     ? "bg-primary/10 text-primary font-semibold"
                                     : "text-gray-700 hover:bg-gray-50",
                             ].join(" ")}
                         >
                             <span className="text-base">{flag}</span>
                             <span>{label}</span>
-                            {lang === code && (
+                            {language === code && (
                                 <span className="ml-auto w-2 h-2 rounded-full bg-primary" />
                             )}
                         </button>
@@ -101,7 +102,6 @@ function LanguageSwitcher() {
     );
 }
 
-// ─── Account Dropdown ─────────────────────────────────────────────────────────
 interface AccountDropdownProps {
     user: AuthUser | null;
     onLoginClick: () => void;
@@ -112,16 +112,16 @@ interface AccountDropdownProps {
 
 function AccountDropdown({ user, onLoginClick, onRegisterClick, onLogout, loggingOut }: AccountDropdownProps) {
     const { open, setOpen, ref } = useDropdown();
+    const { t } = useTranslation();
 
     const authItems = [
-        { href: "/profile", icon: <User size={16} />, label: "Profile" },
-        { href: "/orders", icon: <ClipboardList size={16} />, label: "Order History" },
-        { href: "/change-password", icon: <KeyRound size={16} />, label: "Change Password" },
+        { href: "/profile", icon: <User size={16} />, label: t("profile") },
+        { href: "/orders", icon: <ClipboardList size={16} />, label: t("orders") },
+        { href: "/change-password", icon: <KeyRound size={16} />, label: t("change_password") },
     ];
 
     return (
         <div ref={ref} className="relative">
-            {/* Trigger */}
             <button
                 onClick={() => setOpen((v) => !v)}
                 aria-label="Account menu"
@@ -143,22 +143,15 @@ function AccountDropdown({ user, onLoginClick, onRegisterClick, onLogout, loggin
                 />
             </button>
 
-            {/* Dropdown */}
             {open && (
                 <div className="absolute right-0 mt-2 w-52 rounded-xl border border-white/10 bg-white shadow-xl shadow-black/15 overflow-hidden z-50 animate-fade-in">
                     {user ? (
                         <>
-                            {/* User info */}
                             <div className="px-4 py-3 border-b border-gray-100">
-                                <p className="text-xs text-gray-400 font-medium uppercase tracking-wide">
-                                    Đã đăng nhập
-                                </p>
                                 <p className="text-sm font-semibold text-gray-800 truncate mt-0.5">
                                     {user.name}
                                 </p>
                             </div>
-
-                            {/* Auth menu items */}
                             <div className="py-1">
                                 {authItems.map(({ href, icon, label }) => (
                                     <Link
@@ -173,7 +166,6 @@ function AccountDropdown({ user, onLoginClick, onRegisterClick, onLogout, loggin
                                 ))}
                             </div>
 
-                            {/* Logout */}
                             <div className="border-t border-gray-100 py-1">
                                 <button
                                     onClick={() => {
@@ -188,13 +180,12 @@ function AccountDropdown({ user, onLoginClick, onRegisterClick, onLogout, loggin
                                     ) : (
                                         <LogOut size={16} />
                                     )}
-                                    Logout
+                                    {t("logout")}
                                 </button>
                             </div>
                         </>
                     ) : (
                         <div className="py-1">
-                            {/* Đăng nhập → open modal */}
                             <button
                                 onClick={() => {
                                     setOpen(false);
@@ -205,10 +196,9 @@ function AccountDropdown({ user, onLoginClick, onRegisterClick, onLogout, loggin
                                 <span className="text-gray-400">
                                     <LogIn size={16} />
                                 </span>
-                                Đăng nhập
+                                {t("login")}
                             </button>
 
-                            {/* Đăng ký → open modal */}
                             <button
                                 onClick={() => {
                                     setOpen(false);
@@ -219,7 +209,7 @@ function AccountDropdown({ user, onLoginClick, onRegisterClick, onLogout, loggin
                                 <span className="text-gray-400">
                                     <UserPlus size={16} />
                                 </span>
-                                Đăng ký
+                                {t("register")}
                             </button>
                         </div>
                     )}
@@ -229,15 +219,14 @@ function AccountDropdown({ user, onLoginClick, onRegisterClick, onLogout, loggin
     );
 }
 
-// ─── Header ───────────────────────────────────────────────────────────────────
 export default function Header() {
+    const { t } = useTranslation();
     const [user, setUser] = useState<AuthUser | null>(null);
     const [loginOpen, setLoginOpen] = useState(false);
     const [registerOpen, setRegisterOpen] = useState(false);
     const [loggingOut, setLoggingOut] = useState(false);
     const [initializing, setInitializing] = useState(true);
 
-    // Restore session from localStorage on mount
     useEffect(() => {
         const token = localStorage.getItem("auth_token");
         if (!token) {
@@ -265,7 +254,6 @@ export default function Header() {
         try {
             await AuthService.logout();
         } catch {
-            // proceed regardless
         } finally {
             localStorage.removeItem("auth_token");
             setUser(null);
@@ -276,23 +264,20 @@ export default function Header() {
     return (
         <>
             <header className="h-16 flex items-center justify-between px-4 sm:px-6 bg-primary">
-                {/* Left – Logo */}
                 <div className="flex items-center gap-4">
                     <Link href="/" className="text-xl font-bold text-white tracking-tight">
                         LOGO
                     </Link>
                 </div>
 
-                {/* Center – Search */}
                 <div className="flex-1 max-w-xs sm:max-w-md lg:max-w-xl mx-4 sm:mx-8">
                     <input
                         type="text"
-                        placeholder="Search..."
+                        placeholder={t("search")}
                         className="w-full h-9 border border-white/40 rounded-lg text-white text-sm bg-white/10 focus:bg-white/20 focus:ring-2 focus:ring-white/50 focus:border-white px-4 outline-none placeholder-white/60 transition-all"
                     />
                 </div>
 
-                {/* Right – Language + Account */}
                 <div className="flex items-center gap-2">
                     <LanguageSwitcher />
                     {!initializing && (
@@ -307,7 +292,6 @@ export default function Header() {
                 </div>
             </header>
 
-            {/* Login Modal */}
             <LoginModal
                 open={loginOpen}
                 onClose={() => setLoginOpen(false)}
@@ -318,7 +302,6 @@ export default function Header() {
                 }}
             />
 
-            {/* Register Modal */}
             <RegisterModal
                 open={registerOpen}
                 onClose={() => setRegisterOpen(false)}

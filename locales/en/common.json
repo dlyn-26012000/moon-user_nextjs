@@ -1,0 +1,12 @@
+{
+  "login": "Login",
+  "register": "Register",
+  "logout": "Logout",
+  "language": "Language",
+  "home": "Home",
+  "search": "Search",
+  "profile": "Profile",
+  "orders": "Order History",
+  "change_password": "Change Password",
+  "logged_in": "Logged in"
+}

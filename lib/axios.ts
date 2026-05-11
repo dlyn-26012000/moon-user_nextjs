@@ -4,13 +4,29 @@ const api = axios.create({
     baseURL: process.env.NEXT_PUBLIC_API_URL,
 });
 
-// Attach token from localStorage on every request
+// Attach token and language from localStorage on every request
 api.interceptors.request.use((config) => {
     if (typeof window !== "undefined") {
+        // Token
         const token = localStorage.getItem("auth_token");
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
         }
+
+        // Language
+        const langStorage = localStorage.getItem("language-storage");
+        let lang = "vi"; // Default
+        if (langStorage) {
+            try {
+                const parsed = JSON.parse(langStorage);
+                if (parsed?.state?.language) {
+                    lang = parsed.state.language;
+                }
+            } catch (e) {
+                console.error("Error parsing language-storage", e);
+            }
+        }
+        config.headers["language"] = lang;
     }
     return config;
 });

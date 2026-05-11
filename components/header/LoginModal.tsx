@@ -4,6 +4,7 @@ import { Eye, EyeOff, Loader2, LogIn, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { AuthService } from "@/services/auth.service";
 import type { AuthUser } from "@/types/auth";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface LoginModalProps {
     open: boolean;
@@ -18,6 +19,7 @@ export default function LoginModal({ open, onClose, onSuccess, onSwitchToRegiste
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const { t } = useTranslation();
 
     const usernameRef = useRef<HTMLInputElement>(null);
 
@@ -63,7 +65,7 @@ export default function LoginModal({ open, onClose, onSuccess, onSwitchToRegiste
             });
             console.log(response);
 
-            localStorage.setItem("auth_token", response);
+            localStorage.setItem("auth_token", response.data);
 
             onSuccess();
             setUsername("");
@@ -72,7 +74,7 @@ export default function LoginModal({ open, onClose, onSuccess, onSwitchToRegiste
         } catch (err: unknown) {
             const msg =
                 (err as { response?: { data?: { message?: string } } })
-                    ?.response?.data?.message ?? "Đăng nhập thất bại. Vui lòng thử lại.";
+                    ?.response?.data?.message ?? t("auth:login_failed");
             setError(msg);
         } finally {
             setLoading(false);
@@ -86,7 +88,7 @@ export default function LoginModal({ open, onClose, onSuccess, onSwitchToRegiste
             className="fixed inset-0 z-[100] flex items-center justify-center p-4"
             aria-modal="true"
             role="dialog"
-            aria-label="Đăng nhập"
+            aria-label={t("auth:login_title")}
         >
             <div
                 className="absolute inset-0 bg-black/50 backdrop-blur-sm animate-fade-in"
@@ -99,15 +101,15 @@ export default function LoginModal({ open, onClose, onSuccess, onSwitchToRegiste
                 <div className="p-8">
                     <div className="flex items-start justify-between mb-6">
                         <div>
-                            <h2 className="text-2xl font-bold text-gray-900">Đăng nhập</h2>
+                            <h2 className="text-2xl font-bold text-gray-900">{t("auth:login_title")}</h2>
                             <p className="text-sm text-gray-500 mt-1">
-                                Chào mừng bạn quay trở lại!
+                                {t("auth:welcome_back")}
                             </p>
                         </div>
                         <button
                             onClick={onClose}
                             className="p-1.5 rounded-lg text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition-colors"
-                            aria-label="Đóng"
+                            aria-label={t("auth:close")}
                         >
                             <X size={20} />
                         </button>
@@ -126,7 +128,7 @@ export default function LoginModal({ open, onClose, onSuccess, onSwitchToRegiste
                                 htmlFor="login-username"
                                 className="block text-sm font-medium text-gray-700 mb-1.5"
                             >
-                                Username
+                                {t("auth:username")}
                             </label>
                             <input
                                 ref={usernameRef}
@@ -134,7 +136,7 @@ export default function LoginModal({ open, onClose, onSuccess, onSwitchToRegiste
                                 type="text"
                                 value={username}
                                 onChange={(e) => setUsername(e.target.value)}
-                                placeholder="username"
+                                placeholder={t("auth:username").toLowerCase()}
                                 required
                                 disabled={loading}
                                 className="w-full h-11 px-4 rounded-lg border border-gray-200 text-sm text-gray-900 placeholder-gray-400 outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/20 disabled:opacity-50"
@@ -146,7 +148,7 @@ export default function LoginModal({ open, onClose, onSuccess, onSwitchToRegiste
                                 htmlFor="login-password"
                                 className="block text-sm font-medium text-gray-700 mb-1.5"
                             >
-                                Mật khẩu
+                                {t("auth:password")}
                             </label>
                             <div className="relative">
                                 <input
@@ -165,7 +167,7 @@ export default function LoginModal({ open, onClose, onSuccess, onSwitchToRegiste
                                     tabIndex={-1}
                                     onClick={() => setShowPassword((v) => !v)}
                                     className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
-                                    aria-label={showPassword ? "Ẩn mật khẩu" : "Hiện mật khẩu"}
+                                    aria-label={showPassword ? t("auth:hide_password") : t("auth:show_password")}
                                 >
                                     {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                                 </button>
@@ -177,7 +179,7 @@ export default function LoginModal({ open, onClose, onSuccess, onSwitchToRegiste
                                 href="/forgot-password"
                                 className="text-xs text-primary hover:underline"
                             >
-                                Quên mật khẩu?
+                                {t("auth:forgot_password")}
                             </a>
                         </div>
 
@@ -190,24 +192,24 @@ export default function LoginModal({ open, onClose, onSuccess, onSwitchToRegiste
                             {loading ? (
                                 <>
                                     <Loader2 size={18} className="animate-spin" />
-                                    Đang đăng nhập...
+                                    {t("auth:logging_in")}
                                 </>
                             ) : (
                                 <>
                                     <LogIn size={18} />
-                                    Đăng nhập
+                                    {t("auth:login_button")}
                                 </>
                             )}
                         </button>
                     </form>
 
                     <p className="text-center text-sm text-gray-500 mt-6">
-                        Chưa có tài khoản?{" "}
+                        {t("auth:no_account")}{" "}
                         <button
                             onClick={onSwitchToRegister}
                             className="text-primary font-semibold hover:underline"
                         >
-                            Đăng ký ngay
+                            {t("auth:register_now")}
                         </button>
                     </p>
                 </div>
