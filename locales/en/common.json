@@ -14,5 +14,10 @@
   "email": "Email Address",
   "save": "Save Changes",
   "email_unchangeable": "Email cannot be changed",
-  "profile_updated": "Profile updated successfully!"
+  "profile_updated": "Profile updated successfully!",
+  "current_password": "Current Password",
+  "new_password": "New Password",
+  "confirm_new_password": "Confirm New Password",
+  "change_password_success": "Password changed successfully!",
+  "passwords_do_not_match": "Passwords do not match"
 }

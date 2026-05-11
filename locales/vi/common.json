@@ -14,5 +14,10 @@
   "email": "Địa chỉ Email",
   "save": "Lưu thay đổi",
   "email_unchangeable": "Không thể thay đổi email",
-  "profile_updated": "Cập nhật thông tin thành công!"
+  "profile_updated": "Cập nhật thông tin thành công!",
+  "current_password": "Mật khẩu hiện tại",
+  "new_password": "Mật khẩu mới",
+  "confirm_new_password": "Xác nhận mật khẩu mới",
+  "change_password_success": "Đổi mật khẩu thành công!",
+  "passwords_do_not_match": "Mật khẩu xác nhận không khớp"
 }
