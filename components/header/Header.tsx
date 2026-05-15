@@ -11,7 +11,6 @@ import {
     LogOut,
     ChevronDown,
     Loader2,
-    ShoppingCart, // Added ShoppingCart icon for future use, although not explicitly in header description, it's common for e-commerce
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
@@ -273,31 +272,28 @@ export default function Header() {
     return (
         <>
             <header className="sticky top-0 z-50 h-16 flex items-center justify-between px-4 sm:px-6 bg-primary shadow-md">
-                <div className="flex items-center gap-6">
+                <div className="flex items-center gap-4">
                     <Link href="/" className="text-xl font-bold text-white tracking-tight">
-                        Tochi
+                        LOGO
                     </Link>
-                    <nav className="hidden md:flex items-center gap-6">
-                        <Link href="/collections" className="text-white text-sm font-semibold uppercase hover:text-white/80 transition-colors">
-                            Collections
-                        </Link>
-                        {/* Other navigation items can go here */}
-                    </nav>
                 </div>
 
-                {/* Removed search input as per UI description */}
+                <div className="flex-1 max-w-xs sm:max-w-md lg:max-w-xl mx-4 sm:mx-8">
+                    <input
+                        type="text"
+                        placeholder={t("search")}
+                        className="w-full h-9 border border-white/40 rounded-lg text-white text-sm bg-white/10 focus:bg-white/20 focus:ring-2 focus:ring-white/50 focus:border-white px-4 outline-none placeholder-white/60 transition-all"
+                    />
+                </div>
 
                 <div className="flex items-center gap-2">
-                    <Link href="/cart" aria-label="Shopping Cart" className="p-2 rounded-lg text-white hover:bg-white/10 transition-colors">
-                        <ShoppingCart size={20} strokeWidth={2} />
-                    </Link>
                     <LanguageSwitcher />
                     {!initializing && (
                         <AccountDropdown
                             user={user}
                             onLoginClick={() => setLoginOpen(true)}
                             onRegisterClick={() => setRegisterOpen(true)}
-                            onProfileClick={() => setProfileOpen(false)} // Profile Modal is open directly from here
+                            onProfileClick={() => setProfileOpen(true)}
                             onOrdersClick={() => router.push("/orders")}
                             onChangePasswordClick={() => setChangePasswordOpen(true)}
                             onLogout={handleLogout}
