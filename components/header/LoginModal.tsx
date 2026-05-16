@@ -3,7 +3,6 @@
 import { Eye, EyeOff, Loader2, LogIn, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { AuthService } from "@/services/auth.service";
-import type { AuthUser } from "@/types/auth";
 import { useTranslation } from "@/hooks/useTranslation";
 
 interface LoginModalProps {
@@ -63,8 +62,7 @@ export default function LoginModal({ open, onClose, onSuccess, onSwitchToRegiste
                 username: username.trim(),
                 password,
             });
-            console.log(response);
-
+            // TODO: Handle login response
             localStorage.setItem("auth_token", response.data);
 
             onSuccess();
